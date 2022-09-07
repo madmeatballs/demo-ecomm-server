@@ -30,9 +30,70 @@ module.exports.productExists = async (params) => {
     return result.length > 0 ? true : false;
 };
 
-module.exports.getAll = async () => {
-    const products = await Product.find({ status: 'active' }).populate('category');
+module.exports.getAll = async (params) => {
+    //get products and sortby price or name or date or category
+    const products = await Product.find({}).populate('category').sort(params.sortBy);
+    
+    //sortby price descending
+    if(params.sortBy === 'price') {
+        return products.sort((a, b) => {
+            return b.price - a.price;
+        });
+    }
+
+    //sortby price ascending
+    if(params.sortBy === '-price') {
+        return products.sort((a, b) => {
+            return a.price - b.price;
+        });
+    }
+
+    //sortby name descending
+    if(params.sortBy === 'name') {
+        return products.sort((a, b) => {
+            return b.name.localeCompare(a.name);
+        });
+    }
+
+    //sortby name ascending
+    if(params.sortBy === '-name') {
+        return products.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
+    }
+
+    //sortby date descending
+    if(params.sortBy === 'date') {
+        return products.sort((a, b) => {
+            return b.date - a.date;
+        });
+    }
+
+    //sortby date ascending
+    if(params.sortBy === '-date') {
+        return products.sort((a, b) => {
+            return a.date - b.date;
+        });
+    }
+
+    //sortby category descending
+    if(params.sortBy === 'category') {
+        return products.sort((a, b) => {
+            return b.category.name.localeCompare(a.category.name);
+        });
+    }
+
+    //sortby category ascending
+    if(params.sortBy === '-category') {
+        return products.sort((a, b) => {
+            return a.category.name.localeCompare(b.category.name);
+        });
+    }
+
     return products;
+
+    // const products = await Product.find({ status: 'active' }).populate('category');
+    // return products;
 };
 
 module.exports.getAllInactive = async () => {

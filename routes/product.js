@@ -3,9 +3,13 @@ const router = express.Router();
 const productController = require('../controllers/productController.js');
 
 router.get('/', (req, res) => {
-    productController.getAll().then(products => {
+    //with optional sort by price, and by created_at
+    productController.getAll(req.query).then(products => {
         res.send(products);
     });
+    // productController.getAll().then(products => {
+    //     res.send(products);
+    // });
 });
 
 router.get('/inactive', (req, res) => {
